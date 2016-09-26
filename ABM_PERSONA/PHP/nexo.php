@@ -1,9 +1,11 @@
 <?php 
 
 include "clases/Personas.php";
+include "clases/Profesores.php";
+
 	$DatosPorPost = file_get_contents("php://input");
 	$respuesta = json_decode($DatosPorPost);
-	
+
 
 	if(isset($_GET['accion']))
 {
@@ -15,6 +17,7 @@ include "clases/Personas.php";
 		$respuesta['listado']=Persona::TraerTodasLasPersonas();
 		//var_dump(Persona::TraerTodasLasPersonas());
 		$arrayJson = json_encode($respuesta);
+	
 		echo  $arrayJson;
 	}
 
@@ -58,7 +61,26 @@ if($respuesta->datos->persona->foto!="pordefecto.png")
 			}
 			Persona::ModificarPersona($respuesta->datos->persona);
 			break;
+				case 'validar':
+					$validador = false;
+				$profesores = Profesor::TraerTodosLosProfes();
+				foreach ($profesores as $profe) {
+						if($profe->usuario == $respuesta->datos->usuario->correo)
+						{
+							if($profe->Clave ==$respuesta->datos->usuario->password)
 
+							$validador= true;
+
+						}
+
+								}
+			echo $validador;
+					break;
+
+
+				case 'traer':
+			$profe=Profesor::TraerUnProfesor($respuesta->datos->usuario->correo); 
+			echo $profe->Tipo;
 			 break;
 
 	}

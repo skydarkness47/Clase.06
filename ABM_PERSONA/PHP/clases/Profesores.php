@@ -1,13 +1,13 @@
 <?php
 require_once"accesoDatos.php";
-class Persona
+class Profesor
 {
 //--------------------------------------------------------------------------------//
 //--ATRIBUTOS
 	public $id;
-	public $nombre;
- 	public $apellido;
-  	public $dni;
+	public $usuario;
+ 	public $clave;
+ 	public $tipo;
   	public $foto;
 
 //--------------------------------------------------------------------------------//
@@ -18,17 +18,17 @@ class Persona
 	{
 		return $this->id;
 	}
-	public function GetApellido()
+	public function GetUsuario()
 	{
-		return $this->apellido;
+		return $this->usuario;
 	}
-	public function GetNombre()
+	public function GetClave()
 	{
-		return $this->nombre;
+		return $this->clave;
 	}
-	public function GetDni()
+	public function GetTipo()
 	{
-		return $this->dni;
+		return $this->tipo;
 	}
 	public function GetFoto()
 	{
@@ -39,17 +39,17 @@ class Persona
 	{
 		$this->id = $valor;
 	}
-	public function SetApellido($valor)
+	public function SetUsuario($valor)
 	{
-		$this->apellido = $valor;
+		$this->usuario = $valor;
 	}
-	public function SetNombre($valor)
+	public function SetClave($valor)
 	{
-		$this->nombre = $valor;
+		$this->clave = $valor;
 	}
-	public function SetDni($valor)
+	public function SetTipo($valor)
 	{
-		$this->dni = $valor;
+		$this->tipo = $valor;
 	}
 	public function SetFoto($valor)
 	{
@@ -58,14 +58,14 @@ class Persona
 
 //--------------------------------------------------------------------------------//
 //--CONSTRUCTOR
-	public function __construct($dni=NULL)
+	public function __construct($id=NULL)
 	{
-		if($dni != NULL){
-			$obj = Persona::TraerUnaPersona($dni);
+		if($id != NULL){
+			$obj = Profesor::TraerUnProfesor($id);
 			
-			$this->apellido = $obj->apellido;
-			$this->nombre = $obj->nombre;
-			$this->dni = $dni;
+			$this->usuario = $obj->usuario;
+			$this->clave = $obj->clave;
+			$this->tipo = $tipo;
 			$this->foto = $obj->foto;
 			
 		}
@@ -75,34 +75,33 @@ class Persona
 //--TOSTRING	
   	public function ToString()
 	{
-	  	return $this->apellido."-".$this->nombre."-".$this->dni."-".$this->foto;
+	  	return $this->usuario."-".$this->clave."-".$this->tipo."-".$this->foto;
 	}
 //--------------------------------------------------------------------------------//
 
 //--------------------------------------------------------------------------------//
 //--METODO DE CLASE
-	public static function TraerUnaPersona($idParametro) 
+	public static function TraerUnProfesor($usuario) 
 	{	
 
 
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
-		//$consulta =$objetoAccesoDato->RetornarConsulta("select * from persona where id =:id");
-		$consulta =$objetoAccesoDato->RetornarConsulta("CALL TraerUnaPersona(:id)");
-		$consulta->bindValue(':id', $idParametro, PDO::PARAM_INT);
+		$consulta =$objetoAccesoDato->RetornarConsulta("select * from profesores where Usuario =:usuario");
+		$consulta->bindValue(':usuario', $usuario, PDO::PARAM_STR);
 		$consulta->execute();
-		$personaBuscada= $consulta->fetchObject('persona');
+		$personaBuscada= $consulta->fetchObject('profesor');
 		return $personaBuscada;	
 					
 	}
 	
-	public static function TraerTodasLasPersonas()
+	public static function TraerTodosLosProfes()
 	{
 		$objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso(); 
 		//$consulta =$objetoAccesoDato->RetornarConsulta("select * from persona");
-	$consulta =$objetoAccesoDato->RetornarConsulta("select id,Nombre as nombre, Apellido as apellido,Dni as dni,Foto as foto from persona");
+	$consulta =$objetoAccesoDato->RetornarConsulta("select id,Usuario as usuario, Clave as Clave,Tipo as tipo,Foto as foto from profesores");
 		$consulta->execute();			
-		$arrPersonas= $consulta->fetchAll(PDO::FETCH_CLASS, "persona");	
-		return $arrPersonas;
+		$arrProfesor= $consulta->fetchAll(PDO::FETCH_CLASS, "profesor");	
+		return $arrProfesor;
 	}
 	
 	public static function BorrarPersona($idParametro)

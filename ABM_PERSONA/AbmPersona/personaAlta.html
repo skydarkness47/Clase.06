@@ -25,7 +25,7 @@
       </ul>
 		
 
-	<div class="container">
+	<div ng-if="logeado.perfil == 'admin'" class="container">
 		<div class="page-header">
 			<center> <h1>Datos</h1>   </center>     
 		</div>
@@ -42,10 +42,6 @@
 				<input type="text" name="dni" ng-model="persona.dni"  placeholder="ingrese dni" value="" required/> 
 				<span id="lblDni" style="display:none;color:#FF0000;width:1%;float:right;font-size:80">*</span>
 			
-				<input type="password" ng-model="persona.clave1" name="passwordoriginal" placeholder="Password Orignal"  value="" required/><span id="lblNombre" style="display:none;color:#FF0000;width:1%;float:right;font-size:80">*</span>
-				<p>
-				<input type="password" name="passwordcopia" ng-model="persona.clave2"  placeholder="Password Copia" value="" required/>
-				</p>
 				<input type="hidden" name="idOculto" id="id" value="" />
 				  <!-- 3. nv-file-over uploader="link" over-class="className" -->
        
@@ -90,4 +86,11 @@
 
 			</form>
 	</div>
+	</div>
+
+
+<div ng-if="logeado.perfil != 'admin'" class="container">
+		<div class="page-header">
+			<center> <h1>SOLO USUARIOS ADMINES PUEDEN DAR ALTAS</h1>   </center>     
+		
 	</div>

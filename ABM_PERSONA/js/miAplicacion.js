@@ -3,7 +3,7 @@ var miApp = angular.module("AngularABM",["ui.router","angularFileUpload",'satell
 
 miApp.config(function($stateProvider,$urlRouterProvider,$authProvider){
 
-$authProvider.loginUrl = 'Clase.06/CLASE5-master/ABM_PERSONA/servidor/jwt/php/auth.php';
+$authProvider.loginUrl = 'Clase.06/ABM_PERSONA/servidor/jwt/php/auth.php';
 $authProvider.tokenName = 'TokenNameAxelCores';
 $authProvider.tokenPrefix = 'AngularABM';
 $authProvider.authHeader = 'data';
@@ -147,16 +147,11 @@ miApp.controller("controlInicio",function($scope){
 
 });
 
-miApp.controller("controlInicio",function($scope){
 
+miApp.controller("controlPersonaMenu",function($scope,$state,$auth){
 
-
-
-
-});
-
-miApp.controller("controlPersonaMenu",function($scope,$state){
-
+if(!$auth.isAuthenticated())
+$state.go("login.menu");
 
 $scope.IraAlta = function(){
 $state.go("persona.Alta");
@@ -165,9 +160,21 @@ $scope.IraGrilla = function(){
 	$state.go("persona.Grilla");
 }
 
+
+$scope.Desloguear = function(){
+
+	$auth.logout();
+	$state.go("login.menu");
+}
+
+
 });
-miApp.controller("controlPersonaAlta",function($scope,$state,FileUploader,$http){
-	
+miApp.controller("controlPersonaAlta",function($scope,$state,FileUploader,$http,$auth){
+		$scope.logeado = $auth.getPayload();
+
+if(!$auth.isAuthenticated())
+$state.go("login.menu");
+
 //inicio las variables
 $scope.SubirdorArchivos = new FileUploader({url:'./servidor/archivos.php'});  $scope.persona={};
   $scope.persona.nombre= "natalia" ;
@@ -212,6 +219,10 @@ $scope.SubirdorArchivos.onSuccessItem = function(item, response, status, headers
 	
 
 
+$scope.Desloguear = function(){
+
+	$auth.logout();
+}
 
 $scope.IraAlta = function(){
 $state.go("persona.Alta");
@@ -227,8 +238,8 @@ $scope.IraGrilla = function(){
 
 
 
-miApp.controller("controlPersonaGrilla",function($scope,$state,$http){
-
+miApp.controller("controlPersonaGrilla",function($scope,$state,$http,$auth){
+	$scope.logeado = $auth.getPayload();
 	
  	$http.get('PHP/nexo.php', { params: {accion :"traer"}})
  	.then(function(respuesta) {     	
@@ -240,6 +251,13 @@ miApp.controller("controlPersonaGrilla",function($scope,$state,$http){
      		console.log( response);
 
      	});
+
+
+$scope.Desloguear = function(){
+
+	$auth.logout();
+	$state.go("login.menu");
+}
 
 $scope.IraAlta = function(){
 $state.go("persona.Alta");
@@ -286,11 +304,11 @@ $scope.Modificar=function(persona)
 
 });
 
-miApp.controller("controlLogin",function($scope,$state,$auth){
+miApp.controller("controlLogin",function($scope,$state,$auth,$http){
 
 $scope.usuario={};
-$scope.usuario.correo = "hola@hola";
-$scope.usuario.password = "chau";
+$scope.usuario.correo = "admin@admin";
+$scope.usuario.password = "admin";
 
 if($auth.isAuthenticated())
 	console.info("Token",$auth.getPayload());
@@ -298,8 +316,30 @@ else
 	console.info("No Token",$auth.getPayload());
 
 $scope.IniciarSeccion = function(){
+
+
+$http.post("PHP/nexo.php",{datos:{accion :"validar",usuario:$scope.usuario}})
+ .then(function(respuesta) {       
+         //aca se ejetuca si retorno sin errores        
+         	$scope.validador = respuesta.data;
+
+         	console.info("d",$scope.validador);
+			if($scope.validador != true)
+			{
+				console.log("no entro");
+			}else
+			{
+				console.log("entro");
+ $http.post("PHP/nexo.php",{datos:{accion :"traer",usuario:$scope.usuario}})	
+ 		 	.then(function(respuesta) {     	
+			$datos = respuesta.data;
+			$scope.usuario.tipo =$datos;
+			console.info($scope.usuario);
+
+			
 	$auth.login($scope.usuario)
   	.then(function(response) {
+  		console.info(response);
   		if($auth.isAuthenticated()){
   			$state.go("persona.Grilla");
 			console.info("Token Validado", $auth.getPayload());
@@ -312,6 +352,25 @@ $scope.IniciarSeccion = function(){
   	.catch(function(response) {
     	console.info("no",response);
   	});
+
+
+		},function errorCallback(response) {
+				 $scope.ListadoPersonas= [];
+				console.log( response);
+		 });
+
+
+
+		
+			
+		}
+	    	
+  	});
+
+
+
+
+  	
 }
 
 });
