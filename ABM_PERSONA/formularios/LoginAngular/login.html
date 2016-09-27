@@ -11,6 +11,9 @@
          <p>
         <input type="password" value="" placeholder="ingrese password" ng-model="usuario.password"   />
         </p>
+
+        <button ng-click="authenticate('github')">Sign in with GitHub</button>
+
         <input type="button" id="Ingreso" ng-disabled='formIngreso.$invalid' class="button" ng-Click="IniciarSeccion()" name="Ingreso" value="ingreso" />
         </div>
 

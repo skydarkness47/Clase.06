@@ -7,6 +7,24 @@ $authProvider.loginUrl = 'Clase.06/ABM_PERSONA/servidor/jwt/php/auth.php';
 $authProvider.tokenName = 'TokenNameAxelCores';
 $authProvider.tokenPrefix = 'AngularABM';
 $authProvider.authHeader = 'data';
+$authProvider.httpInterceptor = function() { return true; },
+$authProvider.withCredentials = false;
+$authProvider.tokenRoot = null;
+
+$authProvider.github({
+  url: '/auth/github',
+  authorizationEndpoint: 'https://github.com/login/oauth/authorize',
+  redirectUri: window.location.origin,
+  optionalUrlParams: ['scope'],
+  scope: ['user:email'],
+  scopeDelimiter: ' ',
+  oauthType: '2.0',
+   clientId: 'GitHub Client ID',
+  popupOptions: { width: 1020, height: 618 }
+});
+
+
+
 
 	$stateProvider
 		.state(
@@ -146,6 +164,7 @@ miApp.controller("controlInicio",function($scope){
 
 
 });
+
 
 
 miApp.controller("controlPersonaMenu",function($scope,$state,$auth){
@@ -309,6 +328,11 @@ miApp.controller("controlLogin",function($scope,$state,$auth,$http){
 $scope.usuario={};
 $scope.usuario.correo = "admin@admin";
 $scope.usuario.password = "admin";
+
+$scope.authenticate = function(provider) {
+      $auth.authenticate(provider);
+    };
+
 
 if($auth.isAuthenticated())
 	console.info("Token",$auth.getPayload());
