@@ -169,182 +169,187 @@ miApp.controller("controlInicio",function($scope){
 
 miApp.controller("controlPersonaMenu",function($scope,$state,$auth){
 
-if(!$auth.isAuthenticated())
-$state.go("login.menu");
+		if(!$auth.isAuthenticated())
+		$state.go("login.menu");
 
-$scope.IraAlta = function(){
-$state.go("persona.Alta");
-}
-$scope.IraGrilla = function(){
-	$state.go("persona.Grilla");
-}
+		$scope.IraAlta = function(){
+		$state.go("persona.Alta");
+		}
+		$scope.IraGrilla = function(){
+			$state.go("persona.Grilla");
+		}
 
 
-$scope.Desloguear = function(){
+			$scope.Desloguear = function(){
 
-	$auth.logout();
-	$state.go("login.menu");
-}
+				$auth.logout();
+				$state.go("login.menu");
+			}
 
 
 });
 miApp.controller("controlPersonaAlta",function($scope,$state,FileUploader,$http,$auth){
-		$scope.logeado = $auth.getPayload();
+					$scope.logeado = $auth.getPayload();
 
-if(!$auth.isAuthenticated())
-$state.go("login.menu");
+			if(!$auth.isAuthenticated())
+			$state.go("login.menu");
 
-//inicio las variables
-$scope.SubirdorArchivos = new FileUploader({url:'./servidor/archivos.php'});  $scope.persona={};
-  $scope.persona.nombre= "natalia" ;
-  $scope.persona.dni= "12312312" ;
-  $scope.persona.apellido= "natalia" ;
-  $scope.persona.foto="pordefecto.png";
-
-
-$scope.SubirdorArchivos.onSuccessItem = function(item, response, status, headers) {
-            console.info('onSuccessItem', item, response, status, headers);
-            $http.post('PHP/nexo.php', { datos: {accion :"insertar",persona:$scope.persona}})
-			  .then(function(respuesta) {     	
-			 //aca se ejetuca si retorno sin errores      	
-					 console.log(respuesta.data);
-				
-
-					},function errorCallback(response) {     		
-			//aca se ejecuta cuando hay errores
-					console.log( response);     			
-	  });
-			console.info("Ya guardé el archivo.", item, response, status, headers);
-        };
+			//inicio las variables
+			$scope.SubirdorArchivos = new FileUploader({url:'./servidor/archivos.php'});  $scope.persona={};
+			  $scope.persona.nombre= "natalia" ;
+			  $scope.persona.dni= "12312312" ;
+			  $scope.persona.apellido= "natalia" ;
+			  $scope.persona.foto="pordefecto.png";
 
 
+			$scope.SubirdorArchivos.onSuccessItem = function(item, response, status, headers) {
+			            console.info('onSuccessItem', item, response, status, headers);
+			            $http.post('PHP/nexo.php', { datos: {accion :"insertar",persona:$scope.persona}})
+						  .then(function(respuesta) {     	
+						 //aca se ejetuca si retorno sin errores      	
+								 console.log(respuesta.data);
+							
+
+								},function errorCallback(response) {     		
+						//aca se ejecuta cuando hay errores
+								console.log( response);     			
+				  });
+						console.info("Ya guardé el archivo.", item, response, status, headers);
+			        };
 
 
-  $scope.Guardar=function(){
-	console.log($scope.SubirdorArchivos.queue);
-	if($scope.SubirdorArchivos.queue[0]!=undefined)
-	{
-		var nombreFoto = $scope.SubirdorArchivos.queue[0]._file.name;
-		$scope.persona.foto=nombreFoto;
-	}
-	$scope.SubirdorArchivos.uploadAll();
-  	console.log("persona a guardar:");
-    console.log($scope.persona);
-	
-
-  
-
-  }
-	
 
 
-$scope.Desloguear = function(){
+				  $scope.Guardar=function(){
+					console.log($scope.SubirdorArchivos.queue);
+					if($scope.SubirdorArchivos.queue[0]!=undefined)
+					{
+						var nombreFoto = $scope.SubirdorArchivos.queue[0]._file.name;
+						$scope.persona.foto=nombreFoto;
+					}
+					$scope.SubirdorArchivos.uploadAll();
+				  	console.log("persona a guardar:");
+				    console.log($scope.persona);
+					
 
-	$auth.logout();
-}
+				  
 
-$scope.IraAlta = function(){
-$state.go("persona.Alta");
-}
-$scope.IraGrilla = function(){
-	$state.go("persona.Grilla");
-}
+				  }
+					
+
+
+				$scope.Desloguear = function(){
+
+					$auth.logout();
+				}
+
+				$scope.IraAlta = function(){
+				$state.go("persona.Alta");
+				}
+				$scope.IraGrilla = function(){
+					$state.go("persona.Grilla");
+				}
 
 
 
 });
+
+
+
 
 
 
 
 miApp.controller("controlPersonaGrilla",function($scope,$state,$http,$auth){
-	$scope.logeado = $auth.getPayload();
-	
- 	$http.get('PHP/nexo.php', { params: {accion :"traer"}})
- 	.then(function(respuesta) {     	
-      	 $scope.ListadoPersonas = respuesta.data.listado;
-      	 
+			$scope.logeado = $auth.getPayload();
+			
+		 	$http.get('PHP/nexo.php', { params: {accion :"traer"}})
+		 	.then(function(respuesta) {     	
+		      	 $scope.ListadoPersonas = respuesta.data.listado;
+		      	 
 
-    },function errorCallback(response) {
-     		 $scope.ListadoPersonas= [];
-     		console.log( response);
+		    },function errorCallback(response) {
+		     		 $scope.ListadoPersonas= [];
+		     		console.log( response);
 
-     	});
-
-
-$scope.Desloguear = function(){
-
-	$auth.logout();
-	$state.go("login.menu");
-}
-
-$scope.IraAlta = function(){
-$state.go("persona.Alta");
-}
-$scope.IraGrilla = function(){
-	$state.go("persona.Grilla");
-}
+		     	});
 
 
- 	
- 	$scope.Borrar=function(persona){
-		console.log("borrar"+persona);
+		$scope.Desloguear = function(){
+
+			$auth.logout();
+			$state.go("login.menu");
+		}
+
+		$scope.IraAlta = function(){
+		$state.go("persona.Alta");
+		}
+		$scope.IraGrilla = function(){
+			$state.go("persona.Grilla");
+		}
+
+
+		 	
+		 	$scope.Borrar=function(persona){
+				console.log("borrar"+persona);
 
 
 
-$http.post("PHP/nexo.php",{datos:{accion :"borrar",persona:persona}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
- .then(function(respuesta) {       
-         //aca se ejetuca si retorno sin errores        
-         console.log(respuesta.data);
-		 $http.get('PHP/nexo.php', { params: {accion :"traer"}})
-		.then(function(respuesta) {     	
-			console.log(persona);
-			 $scope.ListadoPersonas = respuesta.data.listado;
-			 console.log(respuesta.data);
+		$http.post("PHP/nexo.php",{datos:{accion :"borrar",persona:persona}},{headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+		 .then(function(respuesta) {       
+		         //aca se ejetuca si retorno sin errores        
+		         console.log(respuesta.data);
+				 $http.get('PHP/nexo.php', { params: {accion :"traer"}})
+				.then(function(respuesta) {     	
+					console.log(persona);
+					 $scope.ListadoPersonas = respuesta.data.listado;
+					 console.log(respuesta.data);
 
-		},function errorCallback(response) {
-				 $scope.ListadoPersonas= [];
-				console.log( response);
-		 });
+				},function errorCallback(response) {
+						 $scope.ListadoPersonas= [];
+						console.log( response);
+				 });
 
-    },function errorCallback(response) {        
-        //aca se ejecuta cuando hay errores
-        console.log( response);           
-    });
-
-
- 	}
+		    },function errorCallback(response) {        
+		        //aca se ejecuta cuando hay errores
+		        console.log( response);           
+		    });
 
 
-$scope.Modificar=function(persona)
-	{
-		$state.go("modificacion", persona);
-	};
+		 	}
+
+
+		$scope.Modificar=function(persona)
+			{
+				$state.go("modificacion", persona);
+			};
 
 });
 
+
+
+
+
 miApp.controller("controlLogin",function($scope,$state,$auth,$http){
 
-$scope.usuario={};
-$scope.usuario.correo = "admin@admin";
-$scope.usuario.password = "admin";
+		$scope.usuario={};
+		$scope.usuario.correo = "admin@admin";
+		$scope.usuario.password = "admin";
 
-$scope.authenticate = function(provider) {
-      $auth.authenticate(provider);
-    };
-
-
-if($auth.isAuthenticated())
-	console.info("Token",$auth.getPayload());
-else
-	console.info("No Token",$auth.getPayload());
-
-$scope.IniciarSeccion = function(){
+		$scope.authenticate = function(provider) {
+		      $auth.authenticate(provider);
+		    };
 
 
-$http.post("PHP/nexo.php",{datos:{accion :"validar",usuario:$scope.usuario}})
- .then(function(respuesta) {       
-         //aca se ejetuca si retorno sin errores        
+		if($auth.isAuthenticated())
+			console.info("Token",$auth.getPayload());
+		else
+			console.info("No Token",$auth.getPayload());
+
+		$scope.IniciarSeccion = function(){
+		$http.post("PHP/nexo.php",{datos:{accion :"validar",usuario:$scope.usuario}})
+		 .then(function(respuesta) {       
+		         //aca se ejetuca si retorno sin errores        
          	$scope.validador = respuesta.data;
 
          	console.info("d",$scope.validador);
@@ -353,24 +358,25 @@ $http.post("PHP/nexo.php",{datos:{accion :"validar",usuario:$scope.usuario}})
 				console.log("no entro");
 			}else
 			{
-				console.log("entro");
- $http.post("PHP/nexo.php",{datos:{accion :"traer",usuario:$scope.usuario}})	
- 		 	.then(function(respuesta) {     	
-			$datos = respuesta.data;
-			$scope.usuario.tipo =$datos;
-			console.info($scope.usuario);
+								console.log("entro");
+				 $http.post("PHP/nexo.php",{datos:{accion :"traer",usuario:$scope.usuario}})	
+				 		 	.then(function(respuesta) {     	
+							$datos = respuesta.data;
+							$scope.usuario.tipo =$datos;
+							console.info($scope.usuario);	
+									
+							$auth.login($scope.usuario)
+				  			.then(function(response) {
+				  				console.info(response);
 
-			
-	$auth.login($scope.usuario)
-  	.then(function(response) {
-  		console.info(response);
-  		if($auth.isAuthenticated()){
-  			$state.go("persona.Grilla");
-			console.info("Token Validado", $auth.getPayload());
-			
-		}
-		else
-			console.info("No Token Valido",$auth.getPayload());
+				  			if($auth.isAuthenticated()){
+				  				$state.go("persona.Grilla");
+							
+							console.info("Token Validado", $auth.getPayload());
+							
+						}
+						else
+							console.info("No Token Valido",$auth.getPayload());
     	
   	})
   	.catch(function(response) {
@@ -382,27 +388,19 @@ $http.post("PHP/nexo.php",{datos:{accion :"validar",usuario:$scope.usuario}})
 				 $scope.ListadoPersonas= [];
 				console.log( response);
 		 });
-
-
-
-		
 			
 		}
 	    	
   	});
-
-
-
-
   	
 }
 
 });
 
+
+
+
 miApp.controller("ControlRegistro",function($scope,$state){
-
-
-
 
 
 });
